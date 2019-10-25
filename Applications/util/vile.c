@@ -1206,7 +1206,7 @@ int open_after(void)
 int save(char *fn)
 {
 	int fd;
-	int i, ok = -1;
+	int i, ok = 0;
 	size_t length;
 	char *gptr;
 
@@ -1218,17 +1218,17 @@ int save(char *fn)
 		movegap();
 		gptr = egap;
 		length = (size_t) (ebuf - egap);
-		ok = 0;
+		ok = 1;
 		/* Write out each chunk that is bigger than INT_MAX as
 		   that is our limit per syscall */
 		while(length > INT_MAX) {
-			ok |= write(fd, gptr, INT_MAX) == INT_MAX;
+			ok &= write(fd, gptr, INT_MAX) == INT_MAX;
 			length -= INT_MAX;
 			gptr += INT_MAX;
 		}
 		/* Write out the tail */
-		ok |= write(fd, gptr, length) == length;
-		ok |= close(fd);
+		ok &= write(fd, gptr, length) == length;
+		ok &= close(fd) == 0;
 		indexp = i;
 		modified = 0;
 	}
