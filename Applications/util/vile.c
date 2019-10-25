@@ -1187,15 +1187,15 @@ int join(void)
 	return 1;
 }
 
-int open_before(void)
+int open_after(void)
 {
-	lnend();
+	lnend(); right();
 	if (!insertch('\n'))
 		return append_mode();
 	return 1;
 }
 
-int open_after(void)
+int open_before(void)
 {
 	lnbegin();
 	if (!insertch('\n') && !up())
